@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>React Test</title>
+  <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" href="./bootstrap/css/bootstrap-theme.css">
+  <script src="./jquery/jquery.js"></script>
+  <script src="./bootstrap/js/bootstrap.js"></script>
+  <style>
+	body{
+		padding-top: 55px;
+	}
+	#container {
+         /*width: 70%;*/
+         margin-left: auto;
+         margin-right: auto;
+         /*border: 1px solid #ccc;*/
+         min-height: 100%;
+         padding: 10px;
+    }
+    .form-singin{
+        max-width: 330px;
+        margin: 10% auto;
+    }
+
+    .login-container{
+        height: 100%;
+    }
+    .register-form {
+        max-width: 100%;
+        margin-left:20%;
+    }
+    div.error{
+        color: red;
+        padding-left:15px;
+        background:url("${pageContext.request.contextPath}/pics/unchecked.gif") no-repeat 0% 50%;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="content"></div>
+  <!-- <script src="http://localhost:8080/webpack-dev-server.js"></script> -->
+  <script src="bundle.js"></script>
+</body>
+</html>
