@@ -34,8 +34,9 @@ function login(state={
 },action){
 	switch(action.type){
 		case LOGIN:
-			console.log(action);
-			return Object.assign({},state);
+			return Object.assign({},state.login,{
+				isLogin:action.isLogin
+			});
 		default:
 			return state
 	}
