@@ -12,4 +12,6 @@ const createStoreWithMiddleware = applyMiddleware(
 		reduxRouterMiddleware
 	)(createStore)
 
+history.listen(location => analyticsService.track(location.pathname))
+
 export const store = createStoreWithMiddleware(rootReducer)

@@ -7,6 +7,7 @@ import {Provider} from 'react-redux';
 import RegisterMoudle from './RegisterMoudle.jsx';
 import {store,history} from '../store/configureStore.js'
 import { syncHistory, routeReducer } from 'redux-simple-router'
+import UserInfo from './UserInfo.jsx'
 
 const Home =()=>{
 	return <div>hello,world</div>
@@ -40,6 +41,7 @@ class MyRouter extends Component{
 					                    </ul>
 					                </li>
 					            </ul>
+					            <UserInfo />
 					        </div>
 				    	</div>
 						</nav>

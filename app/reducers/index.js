@@ -1,7 +1,8 @@
 import {combineReducers} from 'redux'
-import {TEST_HELLO,TEST_BYE,LOGIN} from '../actions'
+import {TEST_HELLO,TEST_BYE,LOGIN,REGISTER,USERINFO,userinfo} from '../actions'
 import fetch from 'isomorphic-fetch'
 import { UPDATE_LOCATION, routeReducer } from 'redux-simple-router'
+import {get,post} from '../util/requestUtil'
 
 function hello(state={
 	name:'scj'
@@ -27,15 +28,50 @@ function bye(state={
 			return state
 	}
 }
-function login(state={
+function user(state={
 	isLogin:false,
 	username:'',
 	password:''
 },action){
 	switch(action.type){
 		case LOGIN:
-			return Object.assign({},state.login,{
+			return Object.assign({},state,{
 				isLogin:action.isLogin
+			});
+		case REGISTER:
+			if(action.password != action.repassword){
+				alert('两次密码必须一致');
+				return;
+			}
+			var data ={
+				username:action.username,
+				password:action.password,
+				userInfoVO:{
+					age:action.age,
+					birth:action.birth,
+					gender:action.gender,
+					nickName:action.nickname
+				}
+			}
+			console.log(data)
+			post('/user/register',data,function(result){
+				console.log(result)
+				if(result.code ==200){
+					console.log(result)
+					return dispatch =>{
+						dispatch(userinfo(result.data.userInfo.nickname|'scj'))
+						action.history.push("/")
+					}
+				}else{
+					alert(result.message)
+				}
+			})
+
+		case USERINFO:
+			console.log(USERINFO)
+			console.log(action)
+			return Object.assign({},state,{
+				nickname:action.nickname
 			});
 		default:
 			return state
@@ -45,7 +81,6 @@ function login(state={
 function update(state="update", action) {
     switch(action.type) {
         case UPDATE_LOCATION:
-        	console.log('update')
             return 'update'
         default:
             return state
@@ -55,7 +90,7 @@ function update(state="update", action) {
 const rootReducer =combineReducers({
 	hello,
 	bye,
-	login,
+	user,
 	update,
 	routing: routeReducer
 })

@@ -21,13 +21,13 @@ class LoginModal extends Component{
 		history.push(path)
 	}
 	handleChange(name,event){
-		console.log(event.target.value)
+		//console.log(event.target.value)
 		this.user[name]=event.target.value
 	}
 	onLoginClick(username,password){
-		const {dispatch} =this.props
-		console.log(username+":"+password)
-		dispatch(login(username,password))
+		const {dispatch,history} =this.props
+		//console.log(username+":"+password)
+		dispatch(login(username,password,history))
 	}
 	render() {
 		
@@ -59,8 +59,9 @@ class LoginModal extends Component{
 }*/
 
 function mapStateToProps(state){
-	const {isLogin,info} =state.login
-	console.log(state)
+	//console.log(state)
+	const {isLogin,info} =state.user
+	//console.log(state)
 	return {
 		isLogin,
 		info,
