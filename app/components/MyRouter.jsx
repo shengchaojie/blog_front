@@ -8,6 +8,7 @@ import RegisterMoudle from './RegisterMoudle.jsx';
 import {store,history} from '../store/configureStore.js'
 import { syncHistory, routeReducer } from 'redux-simple-router'
 import UserInfo from './UserInfo.jsx'
+import MusicChart from './MusicChart.jsx'
 
 const Home =()=>{
 	return <div>hello,world</div>
@@ -22,14 +23,15 @@ class MyRouter extends Component{
 			<Provider store={store}>
 				<Router history={history}>
 					<div>
-						<nav className="navbar navbar-default navbar-fixed-top">
-			    		<div className="container-fluid">
+						<nav className="navbar navbar-default ">
+			    		<div className="container" style={{marginLeft:'10%'}}>
 					        <div className="navbar-header">
 					            <a className="navbar-brand" href="#">生生思凡</a>
 					        </div>
 					        <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					            <ul className="nav navbar-nav navbar-left">
-					                <li><Link to="/">首页</Link></li>
+					            <ul className="nav navbar-nav ">
+					            	{
+					               /* <li><Link to="/">首页</Link></li>
 					                <li><Link to="/login">登录</Link ></li>
 					                <li><Link to="/topics">弹幕留言</Link ></li>
 					                <li className="dropdown">
@@ -39,17 +41,20 @@ class MyRouter extends Component{
 					                        <li><a href="#">我的笔记</a></li>
 					                        <li><a href="${pageContext.request.contextPath}/noteAdd">新笔记</a></li>
 					                    </ul>
-					                </li>
+					                </li>*/
+					                <li><Link to="/musicChart">云音乐</Link ></li>
+					            }
 					            </ul>
 					            <UserInfo />
 					        </div>
 				    	</div>
 						</nav>
 						<div id="container">
-							<Route path="/" exact component={Home}/>
+							<Route path="/" exact component={MusicChart}/>
 				      		<Route path="/login" component={LoginModule}/>
 				      		<Route path="/topics" component={HelloWorld}/>
 				      		<Route path="/register" component={RegisterMoudle}/>
+			      			<Route path="/musicChart" component={MusicChart}/>
 						</div>
 			      	</div>
 				</Router>
