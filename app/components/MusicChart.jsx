@@ -2,7 +2,6 @@ import React,{Component} from 'react'
 import {connect} from 'react-redux'
 import {Pagination,Table,message} from 'antd'
 import {context} from '../constants/GlobalConstants.js'
-import {createBrowserHistory} from 'history';
 import 'isomorphic-fetch'
 
 class RefreshCell extends Component{

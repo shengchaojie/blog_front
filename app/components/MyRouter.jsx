@@ -26,12 +26,13 @@ class MyRouter extends Component{
 						<nav className="navbar navbar-default ">
 			    		<div className="container" style={{marginLeft:'10%'}}>
 					        <div className="navbar-header">
-					            <a className="navbar-brand" href="#">生生思凡</a>
+					            <a className="navbar-brand" href="javascript:void(0)">SCJ</a>
 					        </div>
 					        <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					            <ul className="nav navbar-nav ">
 					            	{
-					               /* <li><Link to="/">首页</Link></li>
+					                <li><Link to="/">首页</Link></li>
+					                /*
 					                <li><Link to="/login">登录</Link ></li>
 					                <li><Link to="/topics">弹幕留言</Link ></li>
 					                <li className="dropdown">
@@ -42,15 +43,16 @@ class MyRouter extends Component{
 					                        <li><a href="${pageContext.request.contextPath}/noteAdd">新笔记</a></li>
 					                    </ul>
 					                </li>*/
-					                <li><Link to="/musicChart">云音乐</Link ></li>
+					                
 					            }
+					            <li><Link to="/musicChart">云音乐</Link ></li>
 					            </ul>
 					            <UserInfo />
 					        </div>
 				    	</div>
 						</nav>
 						<div id="container">
-							<Route path="/" exact component={MusicChart}/>
+							<Route path="/" exact component={HelloWorld}/>
 				      		<Route path="/login" component={LoginModule}/>
 				      		<Route path="/topics" component={HelloWorld}/>
 				      		<Route path="/register" component={RegisterMoudle}/>

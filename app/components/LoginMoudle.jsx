@@ -35,7 +35,7 @@ class LoginModal extends Component{
 		console.log(isLogin)
 		return(
 			<div className="container login-container form-singin">
-	            <h2><strong>请登录</strong>{isLogin?"成功":"失败"}</h2>
+	            <h2><strong>请登录</strong></h2>
 	            <input type="text" name="username" placeholder="用户名"  className="form-control" value={this.username} onChange={this.handleChange.bind(this,'username')}/><br/>
 	            <input type="password" name="password" placeholder="密码"  className="form-control" value={this.password} onChange={this.handleChange.bind(this,'password')}/><br/>
 	            <button className="btn btn-lg btn-primary btn-block" id="login" onClick={()=>this.onLoginClick(this.user.username,this.user.password)}>登陆</button>
