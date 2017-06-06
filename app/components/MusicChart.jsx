@@ -1,44 +1,89 @@
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
-import {Pagination,Table} from 'antd'
-import {get,post} from '../util/requestUtil'
+import {Pagination,Table,message} from 'antd'
+import {context} from '../constants/GlobalConstants.js'
+import {createBrowserHistory} from 'history';
 import 'isomorphic-fetch'
 
-const columns =[
-	{
-		title:'歌名',
-		dataIndex:'songName',
-		key:'songName',
-		render :(text,record) => <a href={record.songUrl} target='_blank'>{text}</a>
-	},
-	{
-		title:'歌手',
-		dataIndex:'singerName',
-		key:'singerName'
-	},
-	{
-		title:'专辑',
-		dataIndex:'albumName',
-		key:'albumName'
-	},
-	{
-		title:'点赞数',
-		dataIndex:'commentCount',
-		key:'commentCount'
-	},
-	{
-		title:'创建时间',
-		dataIndex:'createTime',
-		key:'createTime'
+class RefreshCell extends Component{
+	constructor(props) {
+		super(props);
+		this.handleClick =this.handleClick.bind(this);
+		this.fetchCount =this.fetchCount.bind(this);
+		this.state ={
+			count:this.props.count,
+			id:this.props.id
+		}
 	}
-	];
-
+	handleClick(songId){
+		this.fetchCount(songId);
+	}
+	fetchCount(songId){
+		fetch(context+'/music/song/count?songId='+songId,{
+    		method:'GET',
+    	})
+    	.then(response=>response.json())
+    	.then(response=>{
+    		if(response.code ==200){
+    			message.info('更新成功');
+    			this.setState({
+    			count:response.object
+    			})
+    		}
+    	})
+	}
+	componentWillReceiveProps(nextProps){
+		this.state ={
+			count:nextProps.count,
+			id:nextProps.id
+		}
+	}
+	render(){
+		const {count,id} =this.state;
+		return(
+			<span>
+				{count}&nbsp;
+				<span className='glyphicon glyphicon-refresh' onClick={()=>this.handleClick(id || 0)}></span>
+			</span>
+		);
+	}
+}
 
 class MusicChart extends Component{
 	constructor(props) {
 		super(props);
 		this.handleTableChange=this.handleTableChange.bind(this);
 		this.onShowSizeChange=this.onShowSizeChange.bind(this);
+		this.onShowSizeChange=this.onShowSizeChange.bind(this);
+		this.columns =[
+		{
+			title:'歌名',
+			dataIndex:'songName',
+			key:'songName',
+			render :(text,record) => <a href={record.songUrl} target='_blank'>{text}</a>
+		},
+		{
+			title:'歌手',
+			dataIndex:'singerName',
+			key:'singerName'
+		},
+		{
+			title:'专辑',
+			dataIndex:'albumName',
+			key:'albumName'
+		},
+		{
+			title:'点赞数',
+			dataIndex:'commentCount',
+			key:'commentCount',
+			render: (text,record) => <RefreshCell count={text} id={record.id}/>
+		},
+		{
+			title:'创建时间',
+			dataIndex:'createTime',
+			key:'createTime'
+		}
+		];
 		this.state ={
 	    data: [],
 	    pagination: {
@@ -46,25 +91,28 @@ class MusicChart extends Component{
 	    	showQuickJumper:true,
 	    	pageSize:10,
 	    	onShowSizeChange:this.onShowSizeChange,
+	    	onChange:this.onPaginationChange,
 	    	style:{padding:'0px 10px'}
 	    },
 	    loading: false,
   		}
   		
 	}
+	onPaginationChange(page, pageSize){
+		
+	}
 	onShowSizeChange(current,size){
-		const pagination =this.state.pagination;
+		const {pagination} =this.state;
 		pagination.pageSize =size;
 		this.setState({
 			pagination:pagination
 		})
 	}
 	fetch(params){
-		console.log('params:', params);
     	this.setState({ loading: true });
 
 
-    	fetch('http://localhost/music/page',{
+    	fetch(context+'/music/page',{
     		method:'POST',
     		headers: {
 		    	'Content-Type': 'application/json'
@@ -93,7 +141,6 @@ class MusicChart extends Component{
 	}
 	handleTableChange(pagination,filters,sorter){
 		const pager = this.state.pagination ;
-		console.log(pager);
 	    pager.current = pagination.current;
 	    this.setState({
 	      pagination: pager,
@@ -107,7 +154,7 @@ class MusicChart extends Component{
 		return (
 			<div style={{backgroundColor:'white'}} className="music-chart">
 			<h1>评论数排行榜</h1>
-			<Table columns={columns}
+			<Table columns={this.columns}
 		        rowKey={record => record.registered}
 		        dataSource={this.state.data}
 		        pagination={this.state.pagination}
@@ -119,4 +166,4 @@ class MusicChart extends Component{
 	}
 }
 
-export default MusicChart;
+export default connect()(MusicChart);
