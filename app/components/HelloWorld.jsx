@@ -1,23 +1,25 @@
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
 import {testHello,testBye} from '../actions'
+import ReactMusicPlayer from './ReactMusicPlayer.js'
 
 class BasicExample extends Component{
 	constructor(props) {
 		super(props);
+		this.songs =[{
+			url: 'http://m10.music.126.net/20170606205726/2975dfa6ad059fcb3e6e1c4b3c81c7f9/ymusic/0dd9/d28b/e089/fcbab41f4900212553c5b610c617da2a.mp3',
+    		cover: 'http://p3.music.126.net/cUTk0ewrQtYGP2YpPZoUng==/3265549553028224.jpg',
+		    artist: {
+		      name: '周杰伦',
+		      song: '告白气球'
+		    }
+		}]
 	}
 	render() {
-		const {name,onClick,onClick2,byeName} =this.props
 		return (
 			<div>
-				<div onClick={onClick}>
-				hello,{name}
-				</div>
-				<div onClick={onClick2}>
-				bye,{byeName}
-				</div>
+				<ReactMusicPlayer songs={this.songs} autoplay />
 			</div>
-			
 		);
 	}
 }

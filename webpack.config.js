@@ -3,16 +3,17 @@ var webpack = require('webpack');
 module.exports ={
     entry: ['babel-polyfill',path.resolve(__dirname, './app/main.js')],
     output: {
-        path: path.resolve(__dirname, './build/static'),
-        filename: 'bundle.js'
+        path: path.resolve(__dirname, './build/'),
+        filename: 'bundle.js',
+        publicPath: '/build/static/'
     },
     module: {
         loaders: [{
             test: /\.js[x]?$/,
             exclude: /(node_modules|bower_components)/,
-            loader: 'babel-loader?harmony', // 'babel-loader' is also a legal name to reference  
+            loader: 'babel-loader', // 'babel-loader' is also a legal name to reference  
             query: {
-                presets: ['react', 'es2015'],
+                presets: ['react', 'es2015', "stage-0"],
                 plugins:[
                     ['import', { libraryName: 'antd', style: 'css' }]
                 ]
@@ -20,9 +21,11 @@ module.exports ={
         },
         {test: /\.less$/, loader: 'style-loader!css-loader!less-loader'},
         { test: /\.css$/, loader: 'style-loader!css-loader' },
+        { test: /\.scss$/, loaders: ['style-loader', 'css-loader', 'sass-loader'] }
         ]
     },
     devServer: {
+        contentBase: path.join(__dirname, '/build/'),
         historyApiFallback: true,
         hot: true,
         inline: true,
