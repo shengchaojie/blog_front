@@ -1,8 +1,10 @@
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
-import {Pagination,Table,message} from 'antd'
+import {Pagination,Table,message,Modal,Button} from 'antd'
 import {context} from '../constants/GlobalConstants.js'
 import 'isomorphic-fetch'
+import ReactMusicPlayer from './ReactMusicPlayer.js'
+import '../style/modal.less'
 
 class RefreshCell extends Component{
 	constructor(props) {
@@ -48,8 +50,102 @@ class RefreshCell extends Component{
 	}
 }
 
-class MusicChart extends Component{
+class PlayCell extends Component{
 	constructor(props) {
+		super(props);
+		this.onClick =this.onClick.bind(this)
+		this.showModal =this.showModal.bind(this)
+		this.handleOk =this.handleOk.bind(this)
+		this.handleCancel =this.handleCancel.bind(this)
+		this.state={
+			songInfo :this.props.record,
+			visible: false,
+			songs:[],
+			autoplay:true
+		}
+	}
+	componentWillReceiveProps(nextProps){
+		this.state={
+			songInfo :nextProps.record,
+			visible: false,
+			songs:[],
+			autoplay:true
+		}
+	}
+	onClick(){
+		const {songId} =this.state.songInfo;
+		fetch(context+'/music/song/mp3Url?songId='+songId,{
+    		method:'GET'
+    	}).then(response=>response.json())
+    	.then(response=>{
+    		if(response.code ==200){
+    			//message.info('更新成功');
+    			console.log(response.object);
+    			window.open(response.object);
+    		}
+    	})
+	}
+	handleOk (e){
+	    console.log(e);
+	    this.setState({
+	      visible: false,
+	    });
+  	}
+  	handleCancel(e) {
+	    console.log(e);
+	    console.log('modal close');
+	    //这里需要把播放器关闭
+	    this.setState({
+	      visible: false,
+	      autoplay:false
+	    });
+    }
+	showModal(){
+		const {id,songName,singerName,imgUrl} =this.state.songInfo;
+		fetch(context+'/music/song/mp3Url?songId='+id,{
+    		method:'GET'
+    	}).then(response=>response.json())
+    	.then(response=>{
+    		if(response.code ==200){
+    			//url cover artist:name song
+    			var songs =[];
+    			var song ={
+    				url:response.object,
+    				cover:imgUrl, 	
+    				artist:{
+    					name:singerName,
+    					song:songName
+    				}
+    			}
+				songs.push(song);
+				console.log(songs)
+    			this.setState({
+    				visible:true,
+					songs:songs
+    			})
+    		}
+    	})
+  	}
+	render(){
+		return <span onClick={()=>this.showModal()}>
+		<i className="fa fa-play" aria-hidden="true"></i>
+		 <Modal
+          title={null}
+          closable ={false}
+          visible={this.state.visible}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          footer = {null}
+          wrapClassName={'web'}
+        >
+          <ReactMusicPlayer songs ={this.state.songs} autoplay={this.state.autoplay}/>
+        </Modal>
+		</span>;
+	}
+}
+
+class MusicChart extends Component{
+	constructor(props){
 		super(props);
 		this.handleTableChange=this.handleTableChange.bind(this);
 		this.onShowSizeChange=this.onShowSizeChange.bind(this);
@@ -81,6 +177,12 @@ class MusicChart extends Component{
 			title:'创建时间',
 			dataIndex:'createTime',
 			key:'createTime'
+		},
+		{
+			title:'播放',
+			dataIndex:'play',
+			key:'play',
+			render:(text,record) => <PlayCell record={record} />
 		}
 		];
 		this.state ={
@@ -93,7 +195,7 @@ class MusicChart extends Component{
 	    	onChange:this.onPaginationChange,
 	    	style:{padding:'0px 10px'}
 	    },
-	    loading: false,
+	    loading: false
   		}
   		
 	}
@@ -165,4 +267,4 @@ class MusicChart extends Component{
 	}
 }
 
-export default connect()(MusicChart);
+export default MusicChart;

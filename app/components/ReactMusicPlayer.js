@@ -22,6 +22,12 @@ class ReactMusicPlayer extends Component {
         playerElement.addEventListener('error', this.next);
     }
 
+    componentWillReceiveProps =(nextProps) =>{
+        if(nextProps.autoplay != this.state.play){
+            this.toggle();
+        }
+    }
+
     componentWillUnmount = () => {
         let playerElement = this.refs.player;
         playerElement.removeEventListener('timeupdate', this.updateProgress);
