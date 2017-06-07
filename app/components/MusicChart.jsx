@@ -65,10 +65,12 @@ class PlayCell extends Component{
 		}
 	}
 	componentWillReceiveProps(nextProps){
+		console.log("receive")
+		console.log(nextProps)
 		this.state={
 			songInfo :nextProps.record,
 			visible: false,
-			songs:[],
+			songs:nextProps.songs,
 			autoplay:true
 		}
 	}
@@ -86,14 +88,11 @@ class PlayCell extends Component{
     	})
 	}
 	handleOk (e){
-	    console.log(e);
 	    this.setState({
 	      visible: false,
 	    });
   	}
   	handleCancel(e) {
-	    console.log(e);
-	    console.log('modal close');
 	    //这里需要把播放器关闭
 	    this.setState({
 	      visible: false,
@@ -118,10 +117,13 @@ class PlayCell extends Component{
     				}
     			}
 				songs.push(song);
+				console.log('songs')
 				console.log(songs)
     			this.setState({
-    				visible:true,
 					songs:songs
+    			})
+    			this.setState({
+    				visible:true
     			})
     		}
     	})
@@ -211,8 +213,6 @@ class MusicChart extends Component{
 	}
 	fetch(params){
     	this.setState({ loading: true });
-
-
     	fetch(context+'/music/page',{
     		method:'POST',
     		headers: {

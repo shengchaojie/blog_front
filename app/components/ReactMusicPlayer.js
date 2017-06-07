@@ -23,9 +23,11 @@ class ReactMusicPlayer extends Component {
     }
 
     componentWillReceiveProps =(nextProps) =>{
-        if(nextProps.autoplay != this.state.play){
-            this.toggle();
-        }
+        this.setState({
+            songs:nextProps.songs,
+            active:nextProps.songs[0]
+        })
+        this.toggle();
     }
 
     componentWillUnmount = () => {

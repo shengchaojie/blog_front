@@ -5,7 +5,7 @@ import { Router, Route, browserHistory } from 'react-router'
 import {createBrowserHistory,createHashHistory} from 'history'
 import thunkMiddleware from 'redux-thunk'
 
-export const history =createHashHistory()
+export const history =createBrowserHistory()
 const reduxRouterMiddleware = syncHistory(history)
 const createStoreWithMiddleware = applyMiddleware(
 		thunkMiddleware,
