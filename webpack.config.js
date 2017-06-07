@@ -34,6 +34,11 @@ module.exports ={
         new webpack.DefinePlugin({
             'process.env.NODE.ENV': "development"
         }),
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+         new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
+    })
     ]
 }
