@@ -1,4 +1,4 @@
-import './ReactMusicPlayer.scss';
+import '../style/ReactMusicPlayer.scss';
 import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
 import shuffle from 'shuffle-array';

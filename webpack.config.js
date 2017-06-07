@@ -35,10 +35,10 @@ module.exports ={
             'process.env.NODE.ENV': "development"
         }),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.optimize.UglifyJsPlugin({
+        /*new webpack.optimize.UglifyJsPlugin({
           compress: {
             warnings: false
           }
-        })
+        })*/
     ]
 }

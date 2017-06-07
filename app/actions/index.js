@@ -1,5 +1,7 @@
 import {get,post} from '../util/requestUtil'
 import { routeActions } from 'redux-simple-router'
+import {context} from '../constants/GlobalConstants.js'
+import 'isomorphic-fetch'
 
 export const TEST_HELLO ="test_hello"
 export const TEST_BYE ="test_bye"
@@ -79,9 +81,58 @@ export function register(info,history){
 
 export const USERINFO ="userinfo"
 export function userinfo(nickname){
-	console.log("nickname:"+nickname)
 	return {
 		type:USERINFO,
 		nickname
+	}
+}
+
+export const PLAYMUSIC="playmusic"
+export const STOPMUSIC="stopmusic"
+export function playMusic(songInfo,autoplay){
+	const {id,songName,singerName,imgUrl} =songInfo;
+	//需要根据songid得到song信息
+
+	return dispatch =>{
+	dispatch({
+		type:STOPMUSIC,
+		visible:false,	
+		songs:[],
+		autoplay:autoplay
+	});
+    fetch(context+'/music/song/mp3Url?songId='+id,{
+		method:'GET'
+	}).then(response=>response.json())
+	.then(response=>{
+		if(response.code ==200){
+			//url cover artist:name song
+			var songs =[];
+			var song ={
+				url:response.object,
+				cover:imgUrl, 	
+				artist:{
+					name:singerName,
+					song:songName
+				}
+			}
+			songs.push(song);
+			dispatch({
+				type:PLAYMUSIC,
+				visible:true,
+				songs:songs,
+				autoplay:autoplay
+			})
+		}
+	})
+}
+	
+}
+
+export function stopMusic(songs){
+	return{
+		type:STOPMUSIC,
+		visible:false,
+		autoplay:false,
+		songs:songs
 	}
 }
