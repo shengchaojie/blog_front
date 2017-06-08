@@ -1,10 +1,11 @@
 var path =require('path');
 var webpack = require('webpack');
+
 module.exports ={
     entry: ['babel-polyfill',path.resolve(__dirname, './app/main.js')],
     output: {
         path: path.resolve(__dirname, './build/static'),
-        filename: 'bundle.js',
+        filename: 'bundle.[hash].js',
         publicPath: '/static/'
     },
     module: {
@@ -35,10 +36,10 @@ module.exports ={
             'process.env.NODE.ENV': "development"
         }),
         new webpack.HotModuleReplacementPlugin(),
-        /*new webpack.optimize.UglifyJsPlugin({
+        new webpack.optimize.UglifyJsPlugin({
           compress: {
             warnings: false
           }
-        })*/
+        }),
     ]
 }

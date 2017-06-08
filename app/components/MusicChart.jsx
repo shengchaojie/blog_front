@@ -8,6 +8,11 @@ import '../style/modal.less'
 import PlayCell from './MusicPlayCell.jsx'
 import {stopMusic} from '../actions'
 
+message.config({
+  top: 100,
+  duration: 2,
+});
+
 class RefreshCell extends Component{
 	constructor(props) {
 		super(props);
@@ -28,10 +33,12 @@ class RefreshCell extends Component{
     	.then(response=>response.json())
     	.then(response=>{
     		if(response.code ==200){
-    			message.info('更新成功');
+    			message.success('更新成功');
     			this.setState({
     			count:response.object
     			})
+    		}else{
+    			message.error('更新失败');
     		}
     	})
 	}
@@ -52,6 +59,51 @@ class RefreshCell extends Component{
 	}
 }
 
+class SingerCell extends Component{
+	constructor(props) {
+		super(props);
+		this.state={
+			songId:this.props.songId,
+			singerName:this.props.singerName
+		}
+		this.handleClick=this.handleClick.bind(this)
+	}
+	handleClick(songId){
+		fetch(context+'/music/song/getLostSinger?songId='+songId,{
+    		method:'GET',
+    	})
+    	.then(response=>response.json())
+    	.then(response=>{
+    		if(response.code ==200){
+    			message.info('找回歌手成功2333');
+    			this.setState({
+    			singerName:response.object
+    			})
+    		}else{
+    			message.info('找回歌手失败T——T');
+    		}
+    	})
+	}
+	componentWillReceiveProps(nextProps){
+		this.state ={
+			songId:nextProps.songId,
+			singerName:nextProps.singerName
+		}
+	}
+	render(){
+		const {singerName,songId} =this.state;
+		if(singerName==null||singerName==''){
+			return(
+				<span onClick={()=>this.handleClick(songId)}>
+					<i className="fa fa-search"></i>
+				</span>
+			);
+		}else{
+			return <span>{singerName}</span>
+		}
+		
+	}
+}
 
 
 class MusicChart extends Component{
@@ -70,7 +122,8 @@ class MusicChart extends Component{
 		{
 			title:'歌手',
 			dataIndex:'singerName',
-			key:'singerName'
+			key:'singerName',
+			render:(text,record)=><SingerCell songId={record.id} singerName={text}/>
 		},
 		{
 			title:'专辑',
@@ -192,7 +245,7 @@ class MusicChart extends Component{
 		      	/>
 	      	<Modal
 	          title={null}
-	          closable ={true}
+	          closable ={false}
 	          visible={this.state.visible}
 	          onOk={this.handleOk}
 	          onCancel={this.handleCancel}
