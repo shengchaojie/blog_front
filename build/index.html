@@ -11,9 +11,7 @@
   <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
 	#container {
-         width: 80%;
-         margin-left: auto;
-         margin-right: auto;
+         margin: 0 45px;
          /*border: 1px solid #ccc;*/
          min-height: 100%;
          padding: 15px;
@@ -39,24 +37,33 @@
           background-color: #cccccc;
     }
     .scj-footer{
-          height: 40px;
-          background: #777;
-          text-align: center;
+      clear: both;
+      font-size: 12px;
+      background: #fff;
+      position: relative;
+      z-index: 1;
+      color: rgba(0,0,0,.65);
+      box-shadow: 0 1000px 0 1000px #fff;
+      min-height: 40px;
+      text-align: center;
     }
     .scj-footer p{
           font-family: Arial;
           font-size: 18px;
-          margin-top: 10px;
+          padding-top: 10px;
+          font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
     }
   </style>
 </head>
-<body style="background-color: #ddf;">
-  <div id="content"></div>
-  <script src="static/bundle.js"></script>
-  <footer class="footer navbar-fixed-bottom scj-footer">
-    <div class="container">
+<body style="background-color: #ececec;">
+  <div>
+  <div id="content">
+  </div>
+  <footer class="footer scj-footer">
       <p>shengchaojie@163.com</p>
-    </div>
-</footer>
+  </footer>
+  </div>
+  <script src="static/bundle.js"></script>
+  
 </body>
 </html>
