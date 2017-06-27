@@ -5,6 +5,13 @@ import {context} from '../constants/GlobalConstants.js'
 import 'isomorphic-fetch'
 import ReactMusicPlayer from './ReactMusicPlayer.js'
 import '../style/modal.less'
+import PlayCell from './MusicPlayCell.jsx'
+import {stopMusic} from '../actions'
+
+message.config({
+  top: 100,
+  duration: 2,
+});
 
 class RefreshCell extends Component{
 	constructor(props) {
@@ -26,10 +33,12 @@ class RefreshCell extends Component{
     	.then(response=>response.json())
     	.then(response=>{
     		if(response.code ==200){
-    			message.info('更新成功');
+    			message.success('更新成功');
     			this.setState({
     			count:response.object
     			})
+    		}else{
+    			message.error('更新失败');
     		}
     	})
 	}
@@ -50,101 +59,52 @@ class RefreshCell extends Component{
 	}
 }
 
-class PlayCell extends Component{
+class SingerCell extends Component{
 	constructor(props) {
 		super(props);
-		this.onClick =this.onClick.bind(this)
-		this.showModal =this.showModal.bind(this)
-		this.handleOk =this.handleOk.bind(this)
-		this.handleCancel =this.handleCancel.bind(this)
 		this.state={
-			songInfo :this.props.record,
-			visible: false,
-			songs:[],
-			autoplay:true
+			songId:this.props.songId,
+			singerName:this.props.singerName
 		}
+		this.handleClick=this.handleClick.bind(this)
+	}
+	handleClick(songId){
+		fetch(context+'/music/song/getLostSinger?songId='+songId,{
+    		method:'GET',
+    	})
+    	.then(response=>response.json())
+    	.then(response=>{
+    		if(response.code ==200){
+    			message.info('找回歌手成功2333');
+    			this.setState({
+    			singerName:response.object
+    			})
+    		}else{
+    			message.info('找回歌手失败T——T');
+    		}
+    	})
 	}
 	componentWillReceiveProps(nextProps){
-		console.log("receive")
-		console.log(nextProps)
-		this.state={
-			songInfo :nextProps.record,
-			visible: false,
-			songs:nextProps.songs,
-			autoplay:true
+		this.state ={
+			songId:nextProps.songId,
+			singerName:nextProps.singerName
 		}
 	}
-	onClick(){
-		const {songId} =this.state.songInfo;
-		fetch(context+'/music/song/mp3Url?songId='+songId,{
-    		method:'GET'
-    	}).then(response=>response.json())
-    	.then(response=>{
-    		if(response.code ==200){
-    			//message.info('更新成功');
-    			console.log(response.object);
-    			window.open(response.object);
-    		}
-    	})
-	}
-	handleOk (e){
-	    this.setState({
-	      visible: false,
-	    });
-  	}
-  	handleCancel(e) {
-	    //这里需要把播放器关闭
-	    this.setState({
-	      visible: false,
-	      autoplay:false
-	    });
-    }
-	showModal(){
-		const {id,songName,singerName,imgUrl} =this.state.songInfo;
-		fetch(context+'/music/song/mp3Url?songId='+id,{
-    		method:'GET'
-    	}).then(response=>response.json())
-    	.then(response=>{
-    		if(response.code ==200){
-    			//url cover artist:name song
-    			var songs =[];
-    			var song ={
-    				url:response.object,
-    				cover:imgUrl, 	
-    				artist:{
-    					name:singerName,
-    					song:songName
-    				}
-    			}
-				songs.push(song);
-				console.log('songs')
-				console.log(songs)
-    			this.setState({
-					songs:songs
-    			})
-    			this.setState({
-    				visible:true
-    			})
-    		}
-    	})
-  	}
 	render(){
-		return <span onClick={()=>this.showModal()}>
-		<i className="fa fa-play" aria-hidden="true"></i>
-		 <Modal
-          title={null}
-          closable ={false}
-          visible={this.state.visible}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-          footer = {null}
-          wrapClassName={'web'}
-        >
-          <ReactMusicPlayer songs ={this.state.songs} autoplay={this.state.autoplay}/>
-        </Modal>
-		</span>;
+		const {singerName,songId} =this.state;
+		if(singerName==null||singerName==''){
+			return(
+				<span onClick={()=>this.handleClick(songId)}>
+					<i className="fa fa-search"></i>
+				</span>
+			);
+		}else{
+			return <span>{singerName}</span>
+		}
+		
 	}
 }
+
 
 class MusicChart extends Component{
 	constructor(props){
@@ -162,7 +122,8 @@ class MusicChart extends Component{
 		{
 			title:'歌手',
 			dataIndex:'singerName',
-			key:'singerName'
+			key:'singerName',
+			render:(text,record)=><SingerCell songId={record.id} singerName={text}/>
 		},
 		{
 			title:'专辑',
@@ -197,8 +158,12 @@ class MusicChart extends Component{
 	    	onChange:this.onPaginationChange,
 	    	style:{padding:'0px 10px'}
 	    },
-	    loading: false
+	    loading: false,
+	    songs:this.props.songs,
+    	autoplay:this.props.autoplay,
+    	visible:this.props.visible
   		}
+  		this.handleCancel =this.handleCancel.bind(this)
   		
 	}
 	onPaginationChange(page, pageSize){
@@ -251,6 +216,22 @@ class MusicChart extends Component{
 	    	limit:pager.pageSize
 	    });
 	}
+	handleOk (e){
+	    this.setState({
+	      visible: false,
+	    });
+  	}
+  	handleCancel(e) {
+	    const {onStopMusic} =this.props;
+	    onStopMusic(this.state.songs);
+    }
+    componentWillReceiveProps(nextProps){
+		this.setState({
+			songs:nextProps.songs,
+    		autoplay:nextProps.autoplay,
+    		visible:nextProps.visible
+		});
+	}
 	render(){
 		return (
 			<div style={{backgroundColor:'white'}} className="music-chart">
@@ -262,9 +243,36 @@ class MusicChart extends Component{
 		        loading={this.state.loading}
 		        onChange={this.handleTableChange}
 		      	/>
+	      	<Modal
+	          title={null}
+	          closable ={false}
+	          visible={this.state.visible}
+	          onOk={this.handleOk}
+	          onCancel={this.handleCancel}
+	          footer = {null}
+	          wrapClassName={'web'}
+	        >
+	          <ReactMusicPlayer songs ={this.state.songs} autoplay={this.state.autoplay}/>
+	        </Modal>
 	      	</div>
 		)
 	}
 }
 
-export default MusicChart;
+function mapStateToProps(state){
+	return{
+		songs:state.music.songs,
+    	autoplay:state.music.autoplay,
+    	visible:state.music.visible
+	}
+}
+
+function mapDispatchToProps(dispatch){
+	return {
+		onStopMusic:(songs)=>{
+			dispatch(stopMusic(songs))
+		}
+	}
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(MusicChart);

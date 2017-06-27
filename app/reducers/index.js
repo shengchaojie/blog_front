@@ -3,6 +3,7 @@ import {TEST_HELLO,TEST_BYE,LOGIN,REGISTER,USERINFO,userinfo} from '../actions'
 import fetch from 'isomorphic-fetch'
 import { UPDATE_LOCATION, routeReducer } from 'redux-simple-router'
 import {get,post} from '../util/requestUtil'
+import music from './music.js'
 
 function hello(state={
 	name:'scj'
@@ -88,11 +89,11 @@ function update(state="update", action) {
 }
 
 const rootReducer =combineReducers({
+	music,
 	hello,
 	bye,
 	user,
-	update,
-	routing: routeReducer
+	routing: routeReducer,
 })
 
 export default rootReducer
