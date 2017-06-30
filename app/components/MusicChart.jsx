@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
-import {Pagination,Table,message,Modal,Button} from 'antd'
+import {Pagination,Table,message,Modal,Button,Affix} from 'antd'
 import {context} from '../constants/GlobalConstants.js'
 import 'isomorphic-fetch'
 import ReactMusicPlayer from './ReactMusicPlayer.js'
