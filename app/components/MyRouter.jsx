@@ -9,6 +9,7 @@ import {store,history} from '../store/configureStore.js'
 import { syncHistory, routeReducer } from 'redux-simple-router'
 import UserInfo from './UserInfo.jsx'
 import MusicChart from './MusicChart.jsx'
+import UploadPanel from './UploadPanel.jsx'
 
 const Home =()=>{
 	return <div>hello,world</div>
@@ -32,6 +33,7 @@ class MyRouter extends Component{
 					            <ul className="nav navbar-nav ">
 					            <li><Link to="/">首页</Link></li>
 					                <li><Link to="/musicChart">云音乐</Link ></li>
+					                <li><Link to="/upload">图层</Link ></li>
 					            	{
 
 					                /*
@@ -59,6 +61,8 @@ class MyRouter extends Component{
 				      		<Route path="/topics" component={HelloWorld}/>
 				      		<Route path="/register" component={RegisterMoudle}/>
 			      			<Route path="/musicChart"  component={MusicChart}/>
+			      			<Route path="/upload"  component={UploadPanel}/>
+
 						</div>
 			      	</div>
 				</Router>
