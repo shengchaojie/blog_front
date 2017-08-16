@@ -51,7 +51,6 @@ export function login(username,password,history){
 		data.password =password;
 		post('/user/login',data,function(result){
 			if(result.code ==200){
-				console.log(result)
 				dispatch(userinfo(result.object.userInfoVO.nickName))
 				history.push('/')
 			}else{
@@ -65,7 +64,6 @@ export function login(username,password,history){
 
 export const REGISTER ="register"
 export function register(info,history){
-	console.log(history)
 	return {
 		type:REGISTER,
 		username:info.username,
@@ -134,5 +132,47 @@ export function stopMusic(songs){
 		visible:false,
 		autoplay:false,
 		songs:songs
+	}
+}
+
+export const DISPLAYPIC = 'displaypic'
+export const HIDEPIC ='hidepic'
+export const PAGEPICS ='pagepics'
+
+export function displayPic(imgUrl){
+	return{
+		type:DISPLAYPIC,
+		imgUrl:imgUrl
+	}
+}
+
+export function hidePic(){
+	return {
+		type:HIDEPIC
+	}
+}
+
+export function pagePics(page,limit,description){
+
+	return dispatch =>{
+		fetch(context+'/img/upload/list',{
+			method:'POST',
+			headers: {
+		    	'Content-Type': 'application/json'
+		   	},
+		   	body:JSON.stringify({
+		   		page:page,
+		   		limit:limit,
+		   		description:description
+		   	})
+		})
+		.then(response=>response.json())
+		.then(result=>{
+			dispatch({
+				type:PAGEPICS,
+				data:result.object.list,
+				total:result.object.total
+			})
+		})
 	}
 }

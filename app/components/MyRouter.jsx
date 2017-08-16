@@ -9,7 +9,7 @@ import {store,history} from '../store/configureStore.js'
 import { syncHistory, routeReducer } from 'redux-simple-router'
 import UserInfo from './UserInfo.jsx'
 import MusicChart from './MusicChart.jsx'
-import UploadPanel from './UploadPanel.jsx'
+import UploadPanel from './upload/UploadPanel.jsx'
 
 const Home =()=>{
 	return <div>hello,world</div>

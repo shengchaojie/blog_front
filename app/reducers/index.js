@@ -4,6 +4,7 @@ import fetch from 'isomorphic-fetch'
 import { UPDATE_LOCATION, routeReducer } from 'redux-simple-router'
 import {get,post} from '../util/requestUtil'
 import music from './music.js'
+import {upload ,uploadInfo}from './upload.js'
 
 function hello(state={
 	name:'scj'
@@ -17,6 +18,7 @@ function hello(state={
 			return state
 	}
 }
+
 function bye(state={
 	byeName:'scj'
 },action){
@@ -54,11 +56,8 @@ function user(state={
 					nickName:action.nickname
 				}
 			}
-			console.log(data)
 			post('/user/register',data,function(result){
-				console.log(result)
 				if(result.code ==200){
-					console.log(result)
 					return dispatch =>{
 						dispatch(userinfo(result.data.userInfo.nickname|'scj'))
 						action.history.push("/")
@@ -69,8 +68,6 @@ function user(state={
 			})
 
 		case USERINFO:
-			console.log(USERINFO)
-			console.log(action)
 			return Object.assign({},state,{
 				nickname:action.nickname
 			});
@@ -91,6 +88,8 @@ function update(state="update", action) {
 const rootReducer =combineReducers({
 	music,
 	hello,
+	upload,
+	uploadInfo,
 	bye,
 	user,
 	routing: routeReducer,
