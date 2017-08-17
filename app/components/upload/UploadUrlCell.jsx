@@ -10,6 +10,8 @@ class UploadUrlCell extends Component{
 	constructor(props) {
 		super(props);
 		this.handleClick =this.handleClick.bind(this)
+		this.copyClient =null
+		this.copyUrl = this.copyUrl.bind(this)
 	}
 	state ={
 		imgUrl:this.props.imgUrl,
@@ -21,27 +23,25 @@ class UploadUrlCell extends Component{
 	componentWillReceiveProps(nextProps){
 		this.setState({
 			imgUrl:nextProps.imgUrl,
-			lineNo:nextProps.lineNo
 		});
 	}
+	copyUrl =() =>{
+		message.info("已经复制到剪切板")
+		return this.state.imgUrl
+	}
 	componentDidMount() {
-		/*var client = new ZeroClipboard( $('.clip_button'+this.state.lineNo) );
-        client.on( 'copy', function(event) {
-          event.clipboardData.setData('text/plain', event.target.getAttribute('data-value'));
-          alert('复制成功')
-        } );*/
-
-        /*client.on( 'aftercopy', function(event) {
-          console.log('Copied text to clipboard: ' + event.data['text/plain']);
-        });*/
-        //console.log(new Clipboard('.clip_button'));
-        var client = new Clipboard('.clip_button'+this.state.lineNo,{
-        	text:function(trigger){
-        		message.info("已经粘帖到剪切板");
-        		return trigger.getAttribute('data-value');
-        	}
+        //console.log(this.state.lineNo+"did mount ")
+        this.copyClient = new Clipboard('.clip_button'+this.state.lineNo,{
+        	text:this.copyUrl
         });
 
+	}
+	componentDidUpdate() {
+        //console.log(this.state.lineNo+"did update ")
+        if(this.copyClient==null)
+	        this.copyClient = new Clipboard('.clip_button'+this.state.lineNo,{
+	        	text:this.copyUrl
+	        });
 	}
 	render(){
 		let copyClass =classnames("fa fa-files-o","clip_button"+this.state.lineNo)

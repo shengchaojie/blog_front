@@ -10,7 +10,7 @@ import '../../style/music.less'
 import '../../style/upload.less'
 import UrlCell from './UploadUrlCell.jsx'
 import {hidePic,pagePics} from '../../actions'
-
+var Clipboard = require('clipboard');
 
 const Option = Select.Option;
 
@@ -29,6 +29,7 @@ const columns =[{
 	key:'uploadTime',
 	render:(text,record)=>{
 		var date = new Date(text);
+		console.log(record)
 		return <span>{date.format('yyyy-MM-dd hh:mm:ss')}</span>
 	}
 }];
@@ -38,6 +39,8 @@ class UploadPanel extends Component{
 		super(props);
 		this.handleTableChange =this.handleTableChange.bind(this)
 		this.handleUpload =this.handleUpload.bind(this)
+		this.copyClient =null
+		this.getCopyValue =this.getCopyValue.bind(this)
 	}
 	state ={
 		isFile:true,
@@ -56,7 +59,10 @@ class UploadPanel extends Component{
 	    },
 	    imgVisiable:this.props.imgVisiable,
 	    imgUrl:this.props.imgUrl,
-	    description:''
+	    description:'',
+	    uploadUrl:'',
+	    copyVisiable:false,
+	    copyUrl:'',
 	}
 	onShowSizeChange(current,size){
 		const {pagination} =this.state;
@@ -69,30 +75,51 @@ class UploadPanel extends Component{
 		this.setState({isFile:value==1});
 	}
 	handleUpload(){
-		const { fileList } = this.state;
-	    const formData = new FormData();
-
-	    formData.append('file', fileList[0]);
-	    formData.append('description',this.state.description);
-	    fetch(context+'/img/upload',{
-	    	method: 'POST',
-  			body: formData
-	    })
-	    .then(response=>response.json())
-    	.then(response=>{
-    		if(response.code === 200){
-    			this.props.onLoadData(1,10,'')
-    			message.success("上传成功");
-    			this.setState({
-    				fileList:[]
-    			})
-    			
-    		}
-    	})
+		const { fileList, isFile} = this.state;
+		if(isFile){
+			const formData = new FormData();
+		    formData.append('file', fileList[0]);
+		    formData.append('description',this.state.description);
+		    fetch(context+'/img/upload',{
+		    	method: 'POST',
+	  			body: formData,
+		    })
+		    .then(response=>response.json())
+	    	.then(response=>{
+	    		if(response.code === 200){
+	    			this.props.onLoadData(1,10,'')
+	    			this.setState({
+						fileList:[],
+						isFile:true,
+						copyVisiable:true,
+						copyUrl:response.object
+					})
+	    		}
+	    	})
+		}else{
+			const data = 'url='+encodeURIComponent(this.state.uploadUrl)+'&description='+encodeURIComponent(this.state.description);
+			fetch(context+"/img/uploadUrl",{
+				method:'POST',
+				headers: {
+				    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8 '
+				},
+				body:data
+			})
+			.then(response=>response.json())
+			.then(response=>{
+	    		if(response.code === 200){
+	    			this.props.onLoadData(1,10,'')
+	    			this.setState({
+						fileList:[],
+						isFile:true,
+						copyVisiable:true,
+						copyUrl:response.object
+					})
+	    		}
+	    	})
+		}
 	}
 	handleTableChange(pagination,filters,sorter){
-		console.log('pagination')
-		console.log(this.state)
 		const pager = this.state.pagination ;
 	    pager.current = pagination.current;
 	    this.setState({
@@ -104,46 +131,36 @@ class UploadPanel extends Component{
 	    });*/
 	    this.props.onLoadData(pager.current,pager.pageSize,'')
 	}
-	/*fetchImageInfos(params){
-		this.setState({ loading: true });
-		fetch(context+'/img/upload/list',{
-			method:'POST',
-			headers: {
-		    	'Content-Type': 'application/json'
-		   	},
-		   	body:JSON.stringify(params)
-		})
-		.then(response=>response.json())
-		.then(result =>{
-			const pagination =this.state.pagination;
-    		pagination.total =result.object.total;
-    		var data =result.object.list;
-    		this.setState({
-    			loading: false,
-		        data: data,
-		        pagination,
-    		});
-		})
-	}*/
 	componentWillMount() {
-		/*this.fetchImageInfos({
-			page:1,
-			limit:10,
-			description:''
-		})*/
 		const pager = this.state.pagination ;
 		this.props.onLoadData(pager.current,pager.pageSize,'')
 	}
-	handleOk = (e) => {
-	    this.props.onHideImgClick()
+	getCopyValue = (t)=>{
+		message.info("已经复制到剪切板");
+		return this.state.copyUrl;
 	}
-	handleCancel = (e) => {
-	    this.props.onHideImgClick()
+	componentDidUpdate() {
+		//console.log('did update')
+		const {copyUrl} = this.state
+		/*if(this.copyClient!=null){
+			this.copyClient.destroy()
+		}*/
+		if(this.copyClient==null)
+			this.copyClient = new Clipboard('.ant-modal-footer > .ant-btn-primary',{
+	        	text:this.getCopyValue
+	        })
+        //console.log(this.copyClient)
 	}
 	handleDescriptionChange(event){
 		console.log(event.target.value)
 		this.setState({
 			description:event.target.value
+		});
+	}
+	handleUploadUrlChange(event){
+		console.log(event.target.value)
+		this.setState({
+			uploadUrl:event.target.value
 		});
 	}
     componentWillReceiveProps(nextProps){
@@ -153,24 +170,9 @@ class UploadPanel extends Component{
 			imgVisiable:nextProps.imgVisiable,
     		imgUrl:nextProps.imgUrl,
     		data:nextProps.data,
-    		pagination:pagination
+    		pagination:pagination,
 		});
 	}
-	/*componentDidMount() {
-		console.log('did mount')
-
-		var client = new ZeroClipboard( $('.clip_button') );
-
-        console.log(client)
-
-        client.on( 'copy', function(event) {
-          event.clipboardData.setData('text/plain', event.target.innerHTML);
-        } );
-
-        client.on( 'aftercopy', function(event) {
-          console.log('Copied text to clipboard: ' + event.data['text/plain']);
-        } );
-	}*/
 	render(){
 		let fileStyle =this.state.isFile?{display:'block',widht:'100%'}:{display:'none'};
 		let urlStyle =!this.state.isFile?{display:'block',widht:'100%'}:{display:'none'};
@@ -194,7 +196,7 @@ class UploadPanel extends Component{
 
 		return(
 			<div  className="music-chart">
-				<div style={{border:'1px solid #fff',margin:'0 0 20px 0',padding:'5px',backgroundColor:'white',height:'100px'}}>
+				<div style={{border:'1px solid #fff',margin:'0 0 20px 0',padding:'5px',backgroundColor:'white',minHeight:'100px'}}>
 					<Row style={{margin:'10px 0 10px 0'}}>
 						<Col span={4} offset={2}>
 							<Select style={{width:'80%'}} defaultValue="1" onChange={this.onSelectClick.bind(this)}>
@@ -210,7 +212,7 @@ class UploadPanel extends Component{
 							    </Button>
 						    </Upload>
 						    </div>
-						    <Input addonBefore="Http://" addonAfter="" placeholder="mysite" style={urlStyle} onChange={this.handleDescriptionChange.bind(this)}/>
+						    <Input addonBefore="" addonAfter="" placeholder="url" ref="url" style={urlStyle} onChange={this.handleUploadUrlChange.bind(this)}/>
 						</Col>
 						
 					</Row>
@@ -219,7 +221,7 @@ class UploadPanel extends Component{
 							<Input  placeholder="description" ref="desc" onChange={this.handleDescriptionChange.bind(this)}/>
 						</Col>
 						<Col span={2} offset={1}>
-							<Button onClick={this.handleUpload.bind(this)} disabled={this.state.fileList.length === 0}>提交</Button>
+							<Button onClick={this.handleUpload.bind(this)} disabled={this.state.fileList.length === 0&&this.state.uploadUrl.length ==0}>提交</Button>
 						</Col>
 					</Row>
 				</div>
@@ -229,13 +231,34 @@ class UploadPanel extends Component{
 				<Modal
 		          title={null}
 		          visible={this.state.imgVisiable}
-		          onOk={this.handleOk}
-		          onCancel={this.handleCancel}
+		          onOk={()=>{
+		          	this.props.onHideImgClick()
+		          }}
+		          onCancel={()=>{
+		          	this.props.onHideImgClick()
+		          }}
 		          wrapClassName={'web'}
 		          closable ={false}
 		          footer ={null}
 		        >
 		          <img src={this.state.imgUrl} style={{width:'100%',height:'100%'}} ></img>
+		        </Modal>
+		        <Modal
+		          title={'上传成功'}
+		          visible={this.state.copyVisiable}
+		          onOk={()=>{
+	          		this.setState({
+		          		copyVisiable:false
+		          	})
+		          }}
+		          onCancel={()=>{
+		          	this.setState({
+		          		copyVisiable:false
+		          	})
+		          }}
+		          closable ={true}
+		        >
+		          <div>保存图片的URL为:{this.state.copyUrl},点击确定复制URL</div>
 		        </Modal>
 			</div>
 		);
