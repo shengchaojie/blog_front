@@ -1,5 +1,5 @@
-//const context ="http://music.shengchaojie.com:8888"
-const context ="http://localhost:8888"
+const context ="http://music.shengchaojie.com:8888"
+//const context ="http://localhost:8888"
 
 /**时间转换**/
 Date.prototype.format = function(format)

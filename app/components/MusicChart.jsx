@@ -237,7 +237,7 @@ class MusicChart extends Component{
 			<div style={{backgroundColor:'white'}} className="music-chart">
 			<h1>评论数排行榜</h1>
 			<Table columns={this.columns}
-		        rowKey={record => record.registered}
+		        rowKey="id"
 		        dataSource={this.state.data}
 		        pagination={this.state.pagination}
 		        loading={this.state.loading}

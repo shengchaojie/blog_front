@@ -29,7 +29,7 @@ const columns =[{
 	key:'uploadTime',
 	render:(text,record)=>{
 		var date = new Date(text);
-		console.log(record)
+		//console.log(record)
 		return <span>{date.format('yyyy-MM-dd hh:mm:ss')}</span>
 	}
 }];
@@ -41,9 +41,10 @@ class UploadPanel extends Component{
 		this.handleUpload =this.handleUpload.bind(this)
 		this.copyClient =null
 		this.getCopyValue =this.getCopyValue.bind(this)
+		this.emptyInput =this.emptyInput.bind(this)
 	}
 	state ={
-		isFile:true,
+		isFile:"1",
 		fileList: [],
     	uploading: false,
     	data:this.props.data,
@@ -72,11 +73,22 @@ class UploadPanel extends Component{
 		})
 	}
 	onSelectClick(value){
-		this.setState({isFile:value==1});
+		this.setState({isFile:value});
+		//console.log(this.refs.desc.refs.input)
+		this.emptyInput()
+	}
+	emptyInput = ()=>{
+		//this.refs.desc.refs.input.value=''
+		//this.refs.url.refs.input.value=''
+		this.setState({
+			fileList: [],
+			description:'',
+			uploadUrl:''
+		})
 	}
 	handleUpload(){
 		const { fileList, isFile} = this.state;
-		if(isFile){
+		if(isFile=="1"){
 			const formData = new FormData();
 		    formData.append('file', fileList[0]);
 		    formData.append('description',this.state.description);
@@ -89,12 +101,15 @@ class UploadPanel extends Component{
 	    		if(response.code === 200){
 	    			this.props.onLoadData(1,10,'')
 	    			this.setState({
-						fileList:[],
-						isFile:true,
+						//fileList:[],
+						isFile:"1",
 						copyVisiable:true,
 						copyUrl:response.object
 					})
+	    		}else{
+	    			message.error(response.message)
 	    		}
+	    		this.emptyInput()
 	    	})
 		}else{
 			const data = 'url='+encodeURIComponent(this.state.uploadUrl)+'&description='+encodeURIComponent(this.state.description);
@@ -110,14 +125,18 @@ class UploadPanel extends Component{
 	    		if(response.code === 200){
 	    			this.props.onLoadData(1,10,'')
 	    			this.setState({
-						fileList:[],
-						isFile:true,
+						//fileList:[],
+						isFile:"1",
 						copyVisiable:true,
 						copyUrl:response.object
 					})
+	    		}else{
+					message.error(response.message)
 	    		}
 	    	})
+	    	this.emptyInput()
 		}
+		
 	}
 	handleTableChange(pagination,filters,sorter){
 		const pager = this.state.pagination ;
@@ -174,8 +193,8 @@ class UploadPanel extends Component{
 		});
 	}
 	render(){
-		let fileStyle =this.state.isFile?{display:'block',widht:'100%'}:{display:'none'};
-		let urlStyle =!this.state.isFile?{display:'block',widht:'100%'}:{display:'none'};
+		let fileStyle =this.state.isFile=="1"?{display:'block',widht:'100%'}:{display:'none'};
+		let urlStyle =this.state.isFile!="1"?{display:'block',widht:'100%'}:{display:'none'};
 
 		const props = {
 		  name: 'file',
@@ -199,7 +218,7 @@ class UploadPanel extends Component{
 				<div style={{border:'1px solid #fff',margin:'0 0 20px 0',padding:'5px',backgroundColor:'white',minHeight:'100px'}}>
 					<Row style={{margin:'10px 0 10px 0'}}>
 						<Col span={4} offset={2}>
-							<Select style={{width:'80%'}} defaultValue="1" onChange={this.onSelectClick.bind(this)}>
+							<Select style={{width:'80%'}}  value={this.state.isFile} onChange={this.onSelectClick.bind(this)}>
 								<Option value="1" >文件上传</Option>
 								<Option value="2" >URL上传</Option>
 							</Select>
@@ -212,13 +231,13 @@ class UploadPanel extends Component{
 							    </Button>
 						    </Upload>
 						    </div>
-						    <Input addonBefore="" addonAfter="" placeholder="url" ref="url" style={urlStyle} onChange={this.handleUploadUrlChange.bind(this)}/>
+						    <Input addonBefore="" addonAfter="" placeholder="url" ref="url" style={urlStyle} value={this.state.uploadUrl} onChange={this.handleUploadUrlChange.bind(this)}/>
 						</Col>
 						
 					</Row>
 					<Row style={{margin:'10px 0 10px 0'}}>
 						<Col span={12} offset={6}>
-							<Input  placeholder="description" ref="desc" onChange={this.handleDescriptionChange.bind(this)}/>
+							<Input  placeholder="description" ref="desc" value={this.state.description} onChange={this.handleDescriptionChange.bind(this)}/>
 						</Col>
 						<Col span={2} offset={1}>
 							<Button onClick={this.handleUpload.bind(this)} disabled={this.state.fileList.length === 0&&this.state.uploadUrl.length ==0}>提交</Button>
@@ -226,7 +245,7 @@ class UploadPanel extends Component{
 					</Row>
 				</div>
 				<div style={{backgroundColor:'white'}}>
-					<Table columns={columns} dataSource={this.state.data} loading={this.state.loading} pagination={this.state.pagination} onChange={this.handleTableChange}/>
+					<Table columns={columns} rowKey="id" dataSource={this.state.data} loading={this.state.loading} pagination={this.state.pagination} onChange={this.handleTableChange}/>
 				</div>
 				<Modal
 		          title={null}

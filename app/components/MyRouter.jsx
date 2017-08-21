@@ -24,15 +24,18 @@ class MyRouter extends Component{
 			<Provider store={store}>
 				<Router history={history}>
 					<div>
-						<nav className="navbar navbar-default ">
+						<nav className="navbar navbar-default navbar-fixed-top">
 			    		<div className="container" style={{marginLeft:'45px'}}>
 					        <div className="navbar-header">
 					            <a className="navbar-brand" href="javascript:void(0)">超2杰</a>
 					        </div>
 					        <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					            <ul className="nav navbar-nav ">
-					            <li><Link to="/">首页</Link></li>
+					            {
+					            //<li><Link to="/">首页</Link></li>
+					        }
 					                <li><Link to="/musicChart">云音乐</Link ></li>
+					                <li><a href="http://blog.shengchaojie.com" >博客</a></li>
 					                <li><Link to="/upload">图层</Link ></li>
 					            	{
 
@@ -56,13 +59,12 @@ class MyRouter extends Component{
 				    	</div>
 						</nav>
 						<div id="container">
-							<Route path="/" exact  component={HelloWorld}/>
+							<Route path="/" exact  component={UploadPanel}/>
 				      		<Route path="/login" component={LoginModule}/>
 				      		<Route path="/topics" component={HelloWorld}/>
 				      		<Route path="/register" component={RegisterMoudle}/>
 			      			<Route path="/musicChart"  component={MusicChart}/>
 			      			<Route path="/upload"  component={UploadPanel}/>
-
 						</div>
 			      	</div>
 				</Router>
