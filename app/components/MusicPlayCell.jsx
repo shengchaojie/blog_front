@@ -11,6 +11,7 @@ class PlayCell extends Component{
 	constructor(props) {
 		super(props);
 		this.onPlayMusic =this.props.onPlayMusic.bind(this)
+		this.onJoinShoppingCart=this.props.onJoinShoppingCart.bind(this)
 		this.state={
 			songInfo :this.props.record,
 		}
@@ -22,15 +23,22 @@ class PlayCell extends Component{
 	}
 	render(){
 		return(
-			<span onClick={()=>this.onPlayMusic(this.state.songInfo,true)}>
-				<i className="fa fa-play" aria-hidden="true"></i>
-			</span>);
+			<div>
+				<span onClick={()=>this.onPlayMusic(this.state.songInfo,true)} style={{marginRight:'5px'}}>
+					<i className="fa fa-play" aria-hidden="true"></i>
+				</span>
+				<span  onClick={()=>this.onJoinShoppingCart(this.state.songInfo)}>
+					<i className="fa fa-plus" aria-hidden="true"></i>
+				</span>
+			</div>
+			);
 	}
 	
 }	
 function mapDispatchToProps(dispatch){
 	return {
-		onPlayMusic:(songInfo,autoplay)=>{dispatch(playMusic(songInfo,autoplay))}
+		onPlayMusic:(songInfo,autoplay)=>{dispatch(playMusic(songInfo,autoplay))},
+		onJoinShoppingCart:(songInfo)=>{alert(songInfo.id)}
 	}
 }
 

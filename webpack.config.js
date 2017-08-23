@@ -43,7 +43,7 @@ module.exports ={
             warnings: false
           }}),*/
         //new ExtractTextPlugin("static/css/[name].css"),    //单独使用style标签加载css并设置其路径
-        new HtmlWebpackPlugin({                        //根据模板插入css/js等生成最终HTML
+        /*new HtmlWebpackPlugin({                        //根据模板插入css/js等生成最终HTML
              //favicon:'./src/img/favicon.ico', //favicon路径
              filename:'../index.html',    //生成的html存放路径，相对于 path
              template:'./app/template/index.html',    //html模板路径
@@ -53,7 +53,7 @@ module.exports ={
                 removeComments:true,    //移除HTML中的注释
                  collapseWhitespace:false    //删除空白符与换行符
             }
-         })
+         })*/
         
    ]
 

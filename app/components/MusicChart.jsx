@@ -255,9 +255,9 @@ class MusicChart extends Component{
 			<div style={{backgroundColor:'white'}} className="music-chart">
 			<h1>评论数排行榜</h1>
 			<div style={{margin:'10px'}}>
-				<Input placeholder="歌名" style={{width:'200px',marginRight:'10px'}} value={this.state.songName} onChange ={(e)=>this.setState({songName:e.target.value})}/>
-				<Input placeholder="专辑名" style={{width:'200px',marginRight:'10px'}} value={this.state.albumName} onChange ={(e)=>this.setState({albumName:e.target.value})}/>
-				<Input placeholder="歌手名" style={{width:'200px',marginRight:'10px'}} value={this.state.singerName} onChange ={(e)=>this.setState({singerName:e.target.value})}/>
+				<Input placeholder="歌名" style={{width:'200px',marginRight:'10px'}} value={this.state.songName} onChange ={(e)=>this.setState({songName:e.target.value.trim()})}/>
+				<Input placeholder="专辑名" style={{width:'200px',marginRight:'10px'}} value={this.state.albumName} onChange ={(e)=>this.setState({albumName:e.target.value.trim()})}/>
+				<Input placeholder="歌手名" style={{width:'200px',marginRight:'10px'}} value={this.state.singerName} onChange ={(e)=>this.setState({singerName:e.target.value.trim()})}/>
 				<Button type="primary" onClick={this.fetchData}>搜索</Button>
 			</div>
 			<Table columns={this.columns}
