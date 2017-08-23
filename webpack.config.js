@@ -38,10 +38,10 @@ module.exports ={
             'process.env.NODE.ENV': "development"
         }),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.optimize.UglifyJsPlugin({
+       /* new webpack.optimize.UglifyJsPlugin({
           compress: {
             warnings: false
-          }}),
+          }}),*/
         //new ExtractTextPlugin("static/css/[name].css"),    //单独使用style标签加载css并设置其路径
         new HtmlWebpackPlugin({                        //根据模板插入css/js等生成最终HTML
              //favicon:'./src/img/favicon.ico', //favicon路径

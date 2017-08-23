@@ -151,6 +151,7 @@ class MusicChart extends Component{
 		this.state ={
 	    data: [],
 	    pagination: {
+	    	current:1,
 	    	showSizeChanger:true,
 	    	showQuickJumper:true,
 	    	pageSize:10,
@@ -161,10 +162,14 @@ class MusicChart extends Component{
 	    loading: false,
 	    songs:this.props.songs,
     	autoplay:this.props.autoplay,
-    	visible:this.props.visible
+    	visible:this.props.visible,
+    	songName:'',
+    	singerName:'',
+    	albumName:'',
   		}
   		this.handleCancel =this.handleCancel.bind(this)
-  		
+  		this.fetch =this.fetch.bind(this)
+  		this.fetchData =this.fetchData.bind(this)
 	}
 	onPaginationChange(page, pageSize){
 		
@@ -177,6 +182,7 @@ class MusicChart extends Component{
 		})
 	}
 	fetch(params){
+		console.log(params)
     	this.setState({ loading: true });
     	fetch(context+'/music/page',{
     		method:'POST',
@@ -184,6 +190,9 @@ class MusicChart extends Component{
 		    	'Content-Type': 'application/json'
 		   	},
 		   	body:JSON.stringify({
+		   		singerName:this.state.singerName,
+	    		songName:this.state.songName,
+	    		albumName:this.state.albumName,
 		   		page:params.page,
     			limit:params.limit
 		   	})
@@ -216,6 +225,13 @@ class MusicChart extends Component{
 	    	limit:pager.pageSize
 	    });
 	}
+	fetchData(){
+		const pager = this.state.pagination ;
+		this.fetch({
+	    	page:pager.current,
+	    	limit:pager.pageSize
+	    });
+	}
 	handleOk (e){
 	    this.setState({
 	      visible: false,
@@ -226,10 +242,12 @@ class MusicChart extends Component{
 	    onStopMusic(this.state.songs);
     }
     componentWillReceiveProps(nextProps){
+    	console.log(nextProps)
 		this.setState({
 			songs:nextProps.songs,
     		autoplay:nextProps.autoplay,
-    		visible:nextProps.visible
+    		visible:nextProps.visible,
+    		pagination:nextProps.pagination
 		});
 	}
 	render(){
@@ -237,10 +255,10 @@ class MusicChart extends Component{
 			<div style={{backgroundColor:'white'}} className="music-chart">
 			<h1>评论数排行榜</h1>
 			<div style={{margin:'10px'}}>
-				<Input placeholder="歌名" style={{width:'200px',marginRight:'10px'}} />
-				<Input placeholder="专辑名" style={{width:'200px',marginRight:'10px'}}/>
-				<Input placeholder="歌手名" style={{width:'200px',marginRight:'10px'}}/>
-				<Button type="primary">搜索</Button>
+				<Input placeholder="歌名" style={{width:'200px',marginRight:'10px'}} value={this.state.songName} onChange ={(e)=>this.setState({songName:e.target.value})}/>
+				<Input placeholder="专辑名" style={{width:'200px',marginRight:'10px'}} value={this.state.albumName} onChange ={(e)=>this.setState({albumName:e.target.value})}/>
+				<Input placeholder="歌手名" style={{width:'200px',marginRight:'10px'}} value={this.state.singerName} onChange ={(e)=>this.setState({singerName:e.target.value})}/>
+				<Button type="primary" onClick={this.fetchData}>搜索</Button>
 			</div>
 			<Table columns={this.columns}
 		        rowKey="id"
