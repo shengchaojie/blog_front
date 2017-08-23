@@ -243,7 +243,7 @@ class MusicChart extends Component{
 				<Button type="primary">搜索</Button>
 			</div>
 			<Table columns={this.columns}
-		        rowKey={record => record.registered}
+		        rowKey="id"
 		        dataSource={this.state.data}
 		        pagination={this.state.pagination}
 		        loading={this.state.loading}

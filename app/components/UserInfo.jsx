@@ -16,7 +16,7 @@ class UserInfo extends Component{
 }
 
 function mapStateToProps(state){
-	console.log(state)
+	//console.log(state)
 	const {nickname} =state.user
 	return{
 		nickname
