@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
-import {Pagination,Table,message,Modal,Button,Affix} from 'antd'
+import {Pagination,Table,message,Modal,Button,Affix,Input} from 'antd'
 import {context} from '../constants/GlobalConstants.js'
 import 'isomorphic-fetch'
 import ReactMusicPlayer from './ReactMusicPlayer.js'
@@ -236,6 +236,12 @@ class MusicChart extends Component{
 		return (
 			<div style={{backgroundColor:'white'}} className="music-chart">
 			<h1>评论数排行榜</h1>
+			<div style={{margin:'10px'}}>
+				<Input placeholder="歌名" style={{width:'200px',marginRight:'10px'}} />
+				<Input placeholder="专辑名" style={{width:'200px',marginRight:'10px'}}/>
+				<Input placeholder="歌手名" style={{width:'200px',marginRight:'10px'}}/>
+				<Button type="primary">搜索</Button>
+			</div>
 			<Table columns={this.columns}
 		        rowKey={record => record.registered}
 		        dataSource={this.state.data}
