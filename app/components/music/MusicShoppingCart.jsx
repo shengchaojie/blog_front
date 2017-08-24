@@ -21,11 +21,22 @@ class MusicShoppingCart extends Component{
 			{
 				this.state.songs.map((item)=>{
 					return(
-						<ul key={item.id}>
-						<li >
-							<div><Avatar src={item.imgUrl} /> {item.songName}-{item.singerName}</div>
-							<div>{item.albumName}</div>
-						</li>
+						<ul key={item.id} className="item-content clearfix">
+							<li className="td item-chk">
+								<input type="checkbox" />
+							</li>
+							<li className="td">
+								<img className="item-pic" src={item.imgUrl} />
+							</li>
+							<li className="td item-detail">
+								<span>{item.songName} - {item.singerName}</span><br/>
+								<span>{item.albumName}</span>
+							</li>
+							<li className="td item-trash">
+								<span >
+									<i className="fa fa-trash fa-2x"></i>
+								</span>
+							</li>
 						</ul>
 						)
 				})
