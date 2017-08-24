@@ -1,6 +1,7 @@
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
 import {Pagination,Table,message,Modal,Button,Avatar} from 'antd'
+import '../../style/music.less'
 
 class MusicShoppingCart extends Component{
 	constructor(props) {
@@ -17,18 +18,18 @@ class MusicShoppingCart extends Component{
 	}
 	render(){
 		return(<div>
-			<ul>
 			{
 				this.state.songs.map((item)=>{
 					return(
-						<li key={item.id}>
+						<ul key={item.id}>
+						<li >
 							<div><Avatar src={item.imgUrl} /> {item.songName}-{item.singerName}</div>
 							<div>{item.albumName}</div>
 						</li>
+						</ul>
 						)
 				})
 			}
-			</ul>
 		</div>)
 	}
 }
