@@ -1,6 +1,6 @@
 import HelloWorld from './HelloWorld.jsx';
 import React ,{Component} from  'react';
-import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
+import { Router,Route,Link} from 'react-router-dom';
 import LoginModule from './LoginMoudle.jsx';
 import {createStore} from  'redux';
 import {Provider} from 'react-redux';

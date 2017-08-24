@@ -7,6 +7,7 @@ import ReactMusicPlayer from './ReactMusicPlayer.js'
 import '../style/modal.less'
 import PlayCell from './MusicPlayCell.jsx'
 import {stopMusic} from '../actions'
+import MusicCart from './music/MusicShoppingCart.jsx'
 
 message.config({
   top: 100,
@@ -216,28 +217,25 @@ class MusicChart extends Component{
 		});
 	}
 	handleTableChange(pagination,filters,sorter){
-		const pager = this.state.pagination ;
-	    pager.current = pagination.current;
+		//const pager = this.state.pagination ;
+	    //this.state.pagination.current = pagination.current;
+	    //console.log(pagination)
 	    this.setState({
-	      pagination: pager,
+	      pagination: pagination,
 	    });
 	    this.fetch({
-	    	page:pager.current,
-	    	limit:pager.pageSize
+	    	page:pagination.current,
+	    	limit:pagination.pageSize
 	    });
 	}
 	fetchData(){
+		//console.log(this.state)
 		const pager = this.state.pagination ;
 		this.fetch({
 	    	page:pager.current,
 	    	limit:pager.pageSize
 	    });
 	}
-	handleOk (e){
-	    this.setState({
-	      visible: false,
-	    });
-  	}
   	handleCancel(e) {
 	    const {onStopMusic} =this.props;
 	    onStopMusic(this.state.songs);
@@ -263,6 +261,7 @@ class MusicChart extends Component{
 				<Button type="primary" onClick={this.fetchData}>搜索</Button>
 				<Button type="primary" onClick={()=>{console.log(this.state.cart)}}>查看购物车</Button>
 			</div>
+			<MusicCart songs={this.state.cart}/>
 			<Table columns={this.columns}
 		        rowKey="id"
 		        dataSource={this.state.data}
@@ -274,7 +273,7 @@ class MusicChart extends Component{
 	          title={null}
 	          closable ={false}
 	          visible={this.state.visible}
-	          onOk={this.handleOk}
+	          onOk={()=>{this.setState({visible: false,})}}
 	          onCancel={this.handleCancel}
 	          footer = {null}
 	          wrapClassName={'web'}
