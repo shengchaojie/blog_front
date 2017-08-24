@@ -135,6 +135,16 @@ export function stopMusic(songs){
 	}
 }
 
+
+export const ADDTOCART ='addtocart'
+
+export function addToCart(songInfo){
+	return {
+		type:ADDTOCART,
+		song:songInfo
+	}
+}
+
 export const DISPLAYPIC = 'displaypic'
 export const HIDEPIC ='hidepic'
 export const PAGEPICS ='pagepics'

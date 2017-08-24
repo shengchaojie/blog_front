@@ -5,7 +5,7 @@ import {context} from '../constants/GlobalConstants.js'
 import 'isomorphic-fetch'
 import ReactMusicPlayer from './ReactMusicPlayer.js'
 import '../style/modal.less'
-import {playMusic} from '../actions'
+import {playMusic,addToCart} from '../actions'
 
 class PlayCell extends Component{
 	constructor(props) {
@@ -38,7 +38,7 @@ class PlayCell extends Component{
 function mapDispatchToProps(dispatch){
 	return {
 		onPlayMusic:(songInfo,autoplay)=>{dispatch(playMusic(songInfo,autoplay))},
-		onJoinShoppingCart:(songInfo)=>{alert(songInfo.id)}
+		onJoinShoppingCart:(songInfo)=>{dispatch(addToCart(songInfo))}
 	}
 }
 

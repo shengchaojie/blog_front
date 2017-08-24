@@ -166,6 +166,7 @@ class MusicChart extends Component{
     	songName:'',
     	singerName:'',
     	albumName:'',
+    	cart:this.props.cart
   		}
   		this.handleCancel =this.handleCancel.bind(this)
   		this.fetch =this.fetch.bind(this)
@@ -247,7 +248,8 @@ class MusicChart extends Component{
 			songs:nextProps.songs,
     		autoplay:nextProps.autoplay,
     		visible:nextProps.visible,
-    		pagination:nextProps.pagination
+    		pagination:nextProps.pagination,
+    		cart:nextProps.cart
 		});
 	}
 	render(){
@@ -259,6 +261,7 @@ class MusicChart extends Component{
 				<Input placeholder="专辑名" style={{width:'200px',marginRight:'10px'}} value={this.state.albumName} onChange ={(e)=>this.setState({albumName:e.target.value.trim()})}/>
 				<Input placeholder="歌手名" style={{width:'200px',marginRight:'10px'}} value={this.state.singerName} onChange ={(e)=>this.setState({singerName:e.target.value.trim()})}/>
 				<Button type="primary" onClick={this.fetchData}>搜索</Button>
+				<Button type="primary" onClick={()=>{console.log(this.state.cart)}}>查看购物车</Button>
 			</div>
 			<Table columns={this.columns}
 		        rowKey="id"
@@ -287,7 +290,8 @@ function mapStateToProps(state){
 	return{
 		songs:state.music.songs,
     	autoplay:state.music.autoplay,
-    	visible:state.music.visible
+    	visible:state.music.visible,
+    	cart:state.cart.cart
 	}
 }
 

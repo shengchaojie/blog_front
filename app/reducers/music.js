@@ -1,4 +1,5 @@
-import {PLAYMUSIC,playMusic,STOPMUSIC,stopMusic} from '../actions'
+import {PLAYMUSIC,playMusic,STOPMUSIC,stopMusic,ADDTOCART} from '../actions'
+var uniqs =reuqire('uniqs')
 
 function music(state={
 	visible:false,
@@ -23,4 +24,17 @@ function music(state={
 	}
 }
 
-export default music;
+function cart(state={
+	cart:[]
+},action){
+	switch(action.type){
+		case ADDTOCART:
+			return {
+				cart :uniqs(action.song,this.state.cart)
+			}
+		default:
+			return state
+	}
+}
+
+export {music,cart};
