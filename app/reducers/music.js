@@ -1,5 +1,5 @@
 import {PLAYMUSIC,playMusic,STOPMUSIC,stopMusic,ADDTOCART} from '../actions'
-var uniqs =reuqire('uniqs')
+var uniqs =require('uniqs')
 
 function music(state={
 	visible:false,
@@ -30,7 +30,7 @@ function cart(state={
 	switch(action.type){
 		case ADDTOCART:
 			return {
-				cart :uniqs(action.song,this.state.cart)
+				cart :uniqs(action.song,state.cart)
 			}
 		default:
 			return state
